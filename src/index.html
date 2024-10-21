@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Downloader</title>
+
+  <!-- Include Axios -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+  <style>
+    #loading {
+      display: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>YouTube Downloader</h1>
+  <input type="text" id="url" placeholder="Enter YouTube URL" />
+  <button id="downloadBtn">Download</button>
+  <p id="status"></p>
+  <p id="loading">Downloading... Please wait.</p>
+
+  <script>
+    document.getElementById('downloadBtn').addEventListener('click', async () => {
+      const url = document.getElementById('url').value;
+      
+      // Ask Electron to open a directory selection dialog
+      const directory = await window.electronAPI.chooseDirectory();
+      console.log("Chosen directory:", directory);
+
+      if (url && directory) {
+        document.getElementById('loading').style.display = 'block';
+        
+        // Post the data to Flask backend
+        axios.post('http://127.0.0.1:5000/download', {
+          url: url,
+          directory: directory
+        })
+        .then(response => {
+          document.getElementById('status').innerText = response.data.message;
+          console.log(response.data);
+        })
+        .catch(error => {
+          document.getElementById('status').innerText = 'Error: ' + error.message;
+          console.error("Download error:", error);
+        })
+        .finally(() => {
+          document.getElementById('loading').style.display = 'none';
+        });
+      } else {
+        document.getElementById('status').innerText = 'Please provide both URL and directory.';
+      }
+    });
+  </script>
+</body>
+</html>
