@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "electron-forge start",
-    "package": "electron-forge package",
+    "package": "electron-packager . electron_yt_downloader --platform=win32 --arch=x64 --out=dist/ --overwrite",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\""
@@ -21,6 +21,7 @@
     "@electron-forge/plugin-fuses": "^7.5.0",
     "@electron/fuses": "^1.8.0",
     "electron": "^33.0.0",
+    "electron-packager": "^17.1.2",
     "electron-reload": "^2.0.0-alpha.1"
   },
   "keywords": [],
